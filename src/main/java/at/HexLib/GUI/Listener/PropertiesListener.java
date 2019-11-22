@@ -16,7 +16,7 @@ import java.beans.PropertyChangeListener;
 
 public class PropertiesListener implements PropertyChangeListener {
 
-    HexEditSample hexParent = null;
+    HexEditSample hexParent;
     private HexLibContainer hexLibContainer;
 
     public PropertiesListener(HexEditSample hexEditorSample) {

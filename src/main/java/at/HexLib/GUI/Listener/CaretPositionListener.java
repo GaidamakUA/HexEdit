@@ -19,24 +19,11 @@ public class CaretPositionListener implements MouseListener {
     private boolean dynamicFormatting;
 
     /**
-     * Default constructor.
-     */
-    public CaretPositionListener() {
-    }
-
-    /**
      * Convenience constructor. This class is automatically added as a MouseListener to the
      * specified formatted text fields.
      */
     public CaretPositionListener(JFormattedTextField... components) {
         registerComponent(components);
-    }
-
-    /**
-     *
-     */
-    public boolean isDynamicFormatting() {
-        return dynamicFormatting;
     }
 
     /**
@@ -116,18 +103,10 @@ public class CaretPositionListener implements MouseListener {
     }
 
     private void setCaretPosition(final JFormattedTextField ftf, final int offset) {
-        // try {
-        // Thread.sleep(4000);
-        // } catch (InterruptedException e1) {
-        // e1.printStackTrace();
-        // }
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-                try {
-                    ftf.setCaretPosition(offset);
-                } catch (IllegalArgumentException e) {
-                }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                ftf.setCaretPosition(offset);
+            } catch (IllegalArgumentException e) {
             }
         });
     }

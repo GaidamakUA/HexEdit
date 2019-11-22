@@ -37,9 +37,7 @@ public class SearchActionListener implements ActionListener {
                 ArrayList<Point> listMark = new ArrayList<Point>();
                 if (searchPanel.chkSearchMarkAll.isSelected()) {
                     listMark =
-                            searchAllEntries(searchPanel.txtSearchString.getText(),
-                                    !searchPanel.chkSearchAsString.isSelected(),
-                                    searchPanel.chkSearchCaseSensitive.isSelected());
+                            searchAllEntries(searchPanel.txtSearchString.getText());
                 }
                 if (searchPanel.rdSearchDirectionForward.isSelected()) {
                     foundPosition =
@@ -125,9 +123,7 @@ public class SearchActionListener implements ActionListener {
         hexEditor.getSelectionModel().setSelectionIntervals(listMark);
     }
 
-    private ArrayList<Point> searchAllEntries(String text,
-                                              boolean isDataString,
-                                              boolean isCaseSensitive) {
+    private ArrayList<Point> searchAllEntries(String text) {
         int searchStart = -1;
         ArrayList<Point> retList = new ArrayList<Point>();
         int foundPosition =

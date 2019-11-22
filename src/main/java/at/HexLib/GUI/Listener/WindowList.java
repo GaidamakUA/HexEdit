@@ -34,19 +34,6 @@ public class WindowList implements WindowListener {
 
     @Override
     public void windowActivated(WindowEvent e) {
-        // Frame[] frames = Frame.getFrames();
-        // for (int i = 0; i < frames.length; i++) {
-        // Window[] children = frames[i].getOwnedWindows();
-        // if (children.length > 0)
-        // for (int j = children.length - 1; j >= 0; j--) {
-        // if (children[j].isVisible() && children[j] instanceof JDialog
-        // && !children[j].isShowing()) {
-        // children[j].toFront();
-        // return;
-        // }
-        // }
-        // }
-
     }
 
     @Override
