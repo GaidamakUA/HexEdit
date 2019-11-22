@@ -31,7 +31,6 @@ public class HexLibContainer extends HexLib {
     public HexLibContainer(byte[] byteContent) {
         super(byteContent);
         tabPn = HexEditSample.masterReference.tabPnHexEdit;
-        JTextField muTxt = new JTextField();
         setBackground(Color.WHITE);
         setInactiveBG(Color.GRAY);
         setDisabledBG(Color.GRAY);
@@ -65,24 +64,9 @@ public class HexLibContainer extends HexLib {
                          * know it is a hack, but any other improvements welcomed
                          */
                         requiredActionComponent = (JComponent) e.getComponent();
-                        // HexEditSample.masterReference.pnlOptions.requestFocus(false);
                         HexEditSample.masterReference.tabPnHexEdit.requestFocus(false);
                         lostRequiresAction = true;
                         return;
-                        //          } else {
-                        //            System.out.print(HexEditSample.masterReference.tabPnHexEdit.hasFocus()
-                        //                               + " ;not gained on "
-                        //                               + ((JComponent) e.getComponent()).getRootPane()
-                        //                                                                .getParent()
-                        //                               + " ; "
-                        //                               + e.getOppositeComponent()
-                        // + "#.#");
-                        //            if (e.getOppositeComponent() == null) {
-                        //              System.out.println("null");
-                        //            } else {
-                        //              System.out.println(((JComponent) e.getOppositeComponent()).getRootPane()
-                        //                                   .getParent() );
-                        // }
                     }
 
                     HexEditSample.masterReference.hexEditor =
@@ -100,8 +84,6 @@ public class HexLibContainer extends HexLib {
 
             @Override
             public void focusLost(FocusEvent e) {
-                // System.out.println("require focus request on "
-                // + e);
                 if (lostRequiresAction) {
                     lostRequiresAction = false;
                     requiredActionComponent.requestFocus();
@@ -137,7 +119,7 @@ public class HexLibContainer extends HexLib {
                         && !((ButtonTabComponent) tabPn.getTabComponentAt(i)).isPlusButton) {
                     tabPn.setTitleAt(i, filename);
                     /* update the size as well for the change-indicator */
-                    ((ButtonTabComponent) tabPn.getTabComponentAt(i)).revalidate();
+                    tabPn.getTabComponentAt(i).revalidate();
                 }
             }
         }

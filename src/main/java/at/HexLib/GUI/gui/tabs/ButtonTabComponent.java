@@ -12,9 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public// a closeable tab test
-        // http://download.oracle.com/javase/tutorial/uiswing/examples/components/index.html#TabComponentsDemo
-class ButtonTabComponent extends JPanel {
+public class ButtonTabComponent extends JPanel {
 
     private static Color colorMainBack;
     private static Color colorPressed;

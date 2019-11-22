@@ -49,19 +49,3 @@ public class GhostGlassPane extends JPanel {
         }
     }
 }
-
-// // java 1.7.0-ea-b84
-// class GhostGlassPane extends JPanel {
-// private DnDTabbedPane tabbedPane;
-// public GhostGlassPane(DnDTabbedPane tabbedPane) {
-// this.tabbedPane = tabbedPane;
-// setOpaque(false);
-// }
-// public void setTargetTabbedPane(DnDTabbedPane tab) {
-// tabbedPane = tab;
-// }
-// public void paintComponent(Graphics g) {
-// Graphics2D g2 = (Graphics2D) g;
-// tabbedPane.paintDropLine(g2);
-// }
-// }

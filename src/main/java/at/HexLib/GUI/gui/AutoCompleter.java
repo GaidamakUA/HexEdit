@@ -65,7 +65,6 @@ public abstract class AutoCompleter {
                     KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,
                             0),
                     JComponent.WHEN_FOCUSED);
-            // textComp.getDocument().addDocumentListener(documentListener);
         } else {
             textComp.registerKeyboardAction(showAction,
                     KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,
@@ -182,7 +181,7 @@ public abstract class AutoCompleter {
         list.setRequestFocusEnabled(false);
     }
 
-    static Action acceptAction = new AbstractAction() {
+    private static Action acceptAction = new AbstractAction() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -201,7 +200,7 @@ public abstract class AutoCompleter {
 
     };
 
-    protected void showPopup() {
+    private void showPopup() {
         popup.setVisible(false);
         if (textComp.isEnabled() && updateListData()
                 && list.getModel().getSize() != 0) {
@@ -272,15 +271,13 @@ public abstract class AutoCompleter {
                 completer.popup.setVisible(false);
             }
         }
-
-
     };
 
     /**
      * Selects the next item in the list. It won't change the selection if the currently
      * selected item is already the last item.
      */
-    protected void selectNextPossibleValue() {
+    private void selectNextPossibleValue() {
         int si = list.getSelectedIndex();
 
         if (si < list.getModel().getSize() - 1) {
@@ -294,7 +291,7 @@ public abstract class AutoCompleter {
      * Selects the previous item in the list. It won't change the selection if the currently
      * selected item is already the first item.
      */
-    protected void selectPreviousPossibleValue() {
+    private void selectPreviousPossibleValue() {
         int si = list.getSelectedIndex();
 
         if (si > 0) {

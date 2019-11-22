@@ -7,7 +7,9 @@
 package at.HexLib.GUI.IO;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
@@ -22,53 +24,10 @@ public class LoadContent {
         setProgress(0);
     }
 
-    public static byte[] readFile(JFrame win, String file, int size) {
-
-        int bytesRead;
-        BufferedInputStream bis = null;
-        MyOutputByteStream bosFile = null;
-        try {
-            ProgressMonitorInputStream progessbar =
-                    new ProgressMonitorInputStream(win,
-                            "Reading " + file,
-                            new FileInputStream(file));
-            progessbar.getProgressMonitor().setMillisToDecideToPopup(50);
-            progessbar.getProgressMonitor().setMillisToPopup(100);
-            bis = new BufferedInputStream(progessbar);
-            byte[] buffer = new byte[new MyBufferInput(null).getBufferSize()];
-            bosFile = new MyOutputByteStream(size);
-            while ((bytesRead = bis.read(buffer)) != -1) {
-                bosFile.write(buffer, 0, bytesRead);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (OutOfMemoryError e) {
-            System.err.println("Out of Memory");
-        } finally {
-
-            try {
-                if (bis != null) {
-                    bis.close();
-                }
-            } catch (IOException e) {
-            }
-        }
-        return bosFile.getBuffer();
-        // return bosFile.toByteArray();
-    }
-
     public boolean OutOfMemExceptionRaised = false;
 
     public byte[] readFileNIO(String file) {
         try {
-
-            // BufferedInputStream bis =
-            // new BufferedInputStream(new FileInputStream(file));
-            //
-            // FileInputStream fis = new FileInputStream(file);
-            // FileChannel fileChannel = fis.getChannel();
             System.out.println("Start NIO #2: " + (System.currentTimeMillis()));
             progMonitor.setNote(file);
             setProgress(1);
@@ -138,32 +97,21 @@ public class LoadContent {
     }
 
     private void setProgress(final int curStep) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    progMonitor.setProgress(curStep);
-                } catch (Exception e) {
-                    // nothing to do, cause the ProgressMonitor could be already be closed
-                }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                progMonitor.setProgress(curStep);
+            } catch (Exception e) {
+                // nothing to do, cause the ProgressMonitor could be already be closed
             }
         });
     }
 
     public void hideProgessMonitor() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                progMonitor.close();
-            }
-        });
+        SwingUtilities.invokeLater(() -> progMonitor.close());
     }
 
     private ProgressMonitor getProgessMonitor(JFrame win) {
-        ProgressMonitor monitor =
-                new ProgressMonitor(win, "Reading ", null, 0, maxProgress);
+        ProgressMonitor monitor = new ProgressMonitor(win, "Reading ", null, 0, maxProgress);
         monitor.setMillisToDecideToPopup(0);
         monitor.setMillisToPopup(0);
         return monitor;

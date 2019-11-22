@@ -9,7 +9,6 @@ package at.HexLib.GUI.gui;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 /*@author Santhosh Kumar T - santhosh@in.fiorano.com
@@ -41,12 +40,7 @@ public class FileAutoCompleter extends AutoCompleter {
 
                 index == caretPos ? null : value.substring(index + 1, caretPos)
                         .toLowerCase();
-        File[] files = new File(dir).listFiles(new FilenameFilter() {
-
-            public boolean accept(File dir, String name) {
-                return prefix != null ? name.toLowerCase().startsWith(prefix) : true;
-            }
-        });
+        File[] files = new File(dir).listFiles((dir1, name) -> prefix == null || name.toLowerCase().startsWith(prefix));
         if (files == null) {
             list.setListData(new String[0]);
             return true;

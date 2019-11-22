@@ -12,23 +12,19 @@ import java.awt.event.ComponentEvent;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 
-public class HexLib extends JPanel implements AdjustmentListener,
-        ClipboardOwner {
+public class HexLib extends JPanel implements AdjustmentListener, ClipboardOwner {
 
     /**
      * automatic generated
      */
     private static final long serialVersionUID = -2981812315423877420L;
     byte[] buff;
-    protected static Font font =
-            Font.decode("Monospaced");
-    protected static Font fontBold =
-            font.deriveFont(Font.BOLD);
+    protected static Font font = Font.decode("Monospaced");
+    protected static Font fontBold = font.deriveFont(Font.BOLD);
     protected static int fontHeight = 16;
     protected static int fontWidth = 16;
     protected static int fontMaxDescent;
 
-    public boolean DEBUG = false;
     JScrollBar scrlRight;
     private int start = 0;
     private final int minLines = 10;
@@ -46,7 +42,7 @@ public class HexLib extends JPanel implements AdjustmentListener,
 
     private Color colorHexBackGround =
             UIManager.getColor("TextArea.background");
-    Color colorASCIIBackGround =
+    private Color colorASCIIBackGround =
             UIManager.getColor("TextArea.background");
     private Color colorInactiveBackGround =
             UIManager.getColor("TextArea.inactiveForeground");
@@ -253,7 +249,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
         selectionModel.clear();
     }
 
-    int oldStart = -1;
     private long reCalcHashCode;
 
     public void paint(Graphics g) {
@@ -274,10 +269,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
         } else {
             this.lines = lines;
         }
-    }
-
-    protected int getOverMaxLines() {
-        return (getLines() + scrlRight.getValue()) - maxLineas;
     }
 
     @Override
@@ -312,10 +303,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
     }
 
     public void setStart(int start) {
-        // System.out.println("setStart="
-        // + start
-        // + "/"
-        // + Arrays.toString(Thread.currentThread().getStackTrace()));
         if (start < 0) {
             this.start = 0;
         } else if (start > maxLineas) {
@@ -479,10 +466,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
         });
     }
 
-    public long getHashCode() {
-        return calcHashCode();
-    }
-
     private synchronized long calcHashCode() {
         return Arrays.hashCode(buff);
     }
@@ -561,25 +544,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
      * byte-array. <br>
      * If no such sequence is found , then <code>-1</code> is returned.
      *
-     * @param dataToFind   the search String
-     * @param isDataString true if the String is a String false if the the dataToFind is a
-     *                     representation of bytes, e.g. "0a5f"
-     * @return the index of the first occurrence of the String or <code>-1</code> if not
-     * found.
-     */
-    public int indexOf(String dataToFind, boolean isDataString) {
-        return indexOf(dataToFind, isDataString, 0);
-    }
-
-    public int indexOf(String dataToFind, boolean isDataString, int startPos) {
-        return indexOf(dataToFind, isDataString, false, startPos);
-    }
-
-    /**
-     * Returns the index within this buffer of the first occurrence of the specified
-     * byte-array. <br>
-     * If no such sequence is found , then <code>-1</code> is returned.
-     *
      * @param dataToFind      the search String
      * @param isDataString    true if the String is a String false if the the dataToFind is a
      *                        representation of bytes, e.g. "0a5f"
@@ -622,10 +586,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
         }
     }
 
-    public int indexOf(byte[] dataToFind) {
-        return indexOf(dataToFind, 0);
-    }
-
     public int indexOf(byte[] dataToFind, int startPos) {
         return indexOf(dataToFind, dataToFind, startPos);
     }
@@ -665,21 +625,13 @@ public class HexLib extends JPanel implements AdjustmentListener,
         return -1;
     }
 
-    public int lastIndexOf(String dataToFind, boolean isDataString) {
-        return lastIndexOf(dataToFind, isDataString, 0);
-    }
-
-    public int lastIndexOf(String dataToFind, boolean isDataString, int startPos) {
-        return lastIndexOf(dataToFind, isDataString, false, startPos);
-    }
-
     public int lastIndexOf(String dataToFind,
                            boolean isDataString,
                            boolean isCaseSensitive,
                            int startPos) {
         if (isDataString) {
-            byte[] srchBytesLower = null;
-            byte[] srchBytesUpper = null;
+            byte[] srchBytesLower;
+            byte[] srchBytesUpper;
             if (isCaseSensitive) {
                 srchBytesLower = dataToFind.getBytes();
                 srchBytesUpper = dataToFind.getBytes();
@@ -706,10 +658,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
         }
     }
 
-    public int lastIndexOf(byte[] dataToFind) {
-        return lastIndexOf(dataToFind, -1);
-    }
-
     public int lastIndexOf(byte[] dataToFind, int startPos) {
         return lastIndexOf(dataToFind, dataToFind, startPos);
 
@@ -720,7 +668,6 @@ public class HexLib extends JPanel implements AdjustmentListener,
                             int startPos) {
         int iDataLen = buff.length - 1;
         int iDataToFindLen = dataToFindLowerCase.length - 1;
-        // boolean bGotData = false;
         int iMatchDataCntr = iDataToFindLen;
         if (startPos < 0) {
             startPos = iDataLen;
@@ -731,14 +678,12 @@ public class HexLib extends JPanel implements AdjustmentListener,
             if (buff[i] == dataToFindLowerCase[iMatchDataCntr]
                     || buff[i] == dataToFindUpperCase[iMatchDataCntr]) {
                 iMatchDataCntr--;
-                // bGotData = true;
             } else {
                 if (buff[i] == dataToFindLowerCase[iDataToFindLen]
                         || buff[i] == dataToFindUpperCase[iDataToFindLen]) {
                     iMatchDataCntr = iDataToFindLen - 1;
                 } else {
                     iMatchDataCntr = iDataToFindLen;
-                    // bGotData = false;
                 }
             }
 

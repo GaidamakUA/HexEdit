@@ -53,12 +53,6 @@ public class DnDTabbedPane extends JTabbedPane {
         public boolean isDropable() {
             return dropable;
         }
-        // public String toString() {
-        // return getClass().getName()
-        // + "[dropPoint=" + getDropPoint() + ","
-        // + "index=" + index + ","
-        // + "insert=" + isInsert + "]";
-        // }
     }
 
     private void clickArrowButton(String actionKey) {
@@ -125,12 +119,10 @@ public class DnDTabbedPane extends JTabbedPane {
                 for (int i = 0; i < getTabCount(); i++) {
                     r = getBoundsAt(i);
                     if (isTB) {
-                        // r.translate(-r.width/2, 0);
                         r.x = r.x - r.width / 2;
                         r.y = tar.y;
                         r.height = tar.height;
                     } else {
-                        // r.translate(0, -r.height/2);
                         r.x = tar.x;
                         r.y = tar.y - r.height / 2;
                         r.width = tar.width;
@@ -139,13 +131,6 @@ public class DnDTabbedPane extends JTabbedPane {
                         return new DropLocation(p, i);
                     }
                 }
-                // r = getBoundsAt(getTabCount()-1);
-                // if(isTB) {
-                // r.translate(r.width/2, 0);
-                // }else{
-                // r.translate(0, r.height/2);
-                // }
-                // if(r.contains(p)) return new DropLocation(p, getTabCount());
                 if (tar.contains(p)) {
                     return new DropLocation(p, getTabCount());
                 }
@@ -165,9 +150,7 @@ public class DnDTabbedPane extends JTabbedPane {
         return dropLocation;
     }
 
-    public Object setDropLocation(TransferHandler.DropLocation location,
-                                  Object state,
-                                  boolean forDrop) {
+    public Object setDropLocation(TransferHandler.DropLocation location) {
         Object retVal = null;
         DropLocation old = dropLocation;
         if (location instanceof DropLocation) {
@@ -187,7 +170,7 @@ public class DnDTabbedPane extends JTabbedPane {
         Container parent = target;
         while (parent != null) {
             if (cmp == parent) {
-                return; // target==child: JTabbedPane in JTabbedPane
+                return;
             }
             parent = parent.getParent();
         }
@@ -200,8 +183,6 @@ public class DnDTabbedPane extends JTabbedPane {
         remove(dragIndex);
         target.insertTab(str, icon, cmp, tip, targetIndex);
         target.setEnabledAt(targetIndex, flg);
-        // //ButtonTabComponent
-        // if(tab instanceof ButtonTabComponent) tab = new ButtonTabComponent(target);
         target.setTabComponentAt(targetIndex, tab);
         target.setSelectedIndex(targetIndex);
         if (tab != null && tab instanceof JComponent) {
@@ -357,7 +338,7 @@ public class DnDTabbedPane extends JTabbedPane {
                 th.exportAsDrag(src, e, TransferHandler.MOVE);
                 lineRect.setRect(0, 0, 0, 0);
                 src.getRootPane().getGlassPane().setVisible(true);
-                src.setDropLocation(new DropLocation(tabPt, -1), null, true);
+                src.setDropLocation(new DropLocation(tabPt, -1));
                 startPt = null;
             }
         }
@@ -387,15 +368,9 @@ public class DnDTabbedPane extends JTabbedPane {
      * Detaches the <code>index</code> tab in a seperate frame. When the frame is closed,
      * the tab is automatically reinserted into the tabbedPane.
      *
-     * @param index
-     *          index of the tabbedPane to be detached
+     * @param index index of the tabbedPane to be detached
      */
     public void detachTab(int index) {
-        detachTab(index, null);
-    }
-
-    public void detachTab(int index, Image iconImage) {
-
         if (index < 0 || index >= getTabCount()) {
             return;
         }
