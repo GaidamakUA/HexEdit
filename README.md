@@ -12,7 +12,7 @@ End goal is to create modern HexEditor component for JavaFX like HexLib used to 
 ## Roadmap
 - [x] Editor
 - [x] Save and Load features
-- [ ] Copy & Paste
+- [x] Copy & Paste
 - [ ] Undo & Redo
 - [ ] Tables
 
