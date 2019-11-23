@@ -13,10 +13,6 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class HexLib extends JPanel implements AdjustmentListener, ClipboardOwner {
-
-    /**
-     * automatic generated
-     */
     private static final long serialVersionUID = -2981812315423877420L;
     byte[] buff;
     protected static Font font = Font.decode("Monospaced");

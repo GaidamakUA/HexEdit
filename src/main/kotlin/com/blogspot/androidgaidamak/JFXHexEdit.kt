@@ -1,23 +1,27 @@
 package com.blogspot.androidgaidamak
 
 import javafx.application.Application
-import javafx.event.EventHandler
+import javafx.fxml.FXMLLoader
+import javafx.scene.Parent
 import javafx.scene.Scene
-import javafx.scene.control.Button
-import javafx.scene.layout.StackPane
 import javafx.stage.Stage
+import java.io.File
+
 
 class JFXHexEdit : Application() {
 
-    override fun start(primaryStage: Stage) {
-        primaryStage.title = "HexEdit"
-        val btn = Button()
-        btn.text = "Say 'Hello World'"
-        btn.onAction = EventHandler { println("Hello World!") }
+    lateinit var stage: Stage
 
-        val root = StackPane()
-        root.children.add(btn)
-        primaryStage.scene = Scene(root, 300.0, 250.0)
+    override fun start(primaryStage: Stage) {
+        stage = primaryStage
+        primaryStage.title = "HexEdit"
+
+        val url = File("src/main/kotlin/com/blogspot/androidgaidamak/JFXHexEditLayout.fxml").toURI().toURL()
+        val loader = FXMLLoader(url)
+        val root = loader.load<Parent>()
+        val controller = loader.getController() as JFXHexEditController
+        controller.setApplication(this)
+        primaryStage.scene = Scene(root, 600.0, 400.0)
         primaryStage.show()
     }
 
