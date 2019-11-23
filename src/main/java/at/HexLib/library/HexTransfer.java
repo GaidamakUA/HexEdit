@@ -42,7 +42,7 @@ public class HexTransfer {
         this.he = he;
     }
 
-    void copyContent2Clipboard() {
+    public void copyContent2Clipboard() {
         ArrayList<Point> listMarks = he.getSelectionModel().getSelectionList();
         if (listMarks == null || listMarks.size() == 0) {
             /* nothing selected */
@@ -66,7 +66,7 @@ public class HexTransfer {
         clipboard.setContents(copy2ClipBoard, he);
     }
 
-    synchronized void pasteContentFromClipboard() {
+    public synchronized void pasteContentFromClipboard() {
         Transferable clipData = clipboard.getContents(clipboard);
         if (clipData != null) {
             try {

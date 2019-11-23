@@ -243,21 +243,6 @@ public class BasicPanel extends JComponent implements KeyListener {
                     hexLib.repaint();
                 }
                 break;
-            case 67: // c
-                if (e.getModifiers() == InputEvent.CTRL_MASK) {
-                    hexLib.getHexTransferHandler().copyContent2Clipboard();
-                }
-                break;
-            case 86: // v
-                if (e.getModifiers() == InputEvent.CTRL_MASK) {
-                    hexLib.getHexTransferHandler().pasteContentFromClipboard();
-                }
-                break;
-            case 88: // x
-                if (e.getModifiers() == InputEvent.CTRL_MASK) {
-                    hexLib.getHexTransferHandler().cutContent2Clipboard();
-                }
-                break;
             case 127: // DEL
                 hexLib.getHexTransferHandler().deleteChars();
                 break;

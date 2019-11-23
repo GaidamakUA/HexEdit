@@ -4,6 +4,7 @@ import at.HexLib.library.HexLib
 import javafx.embed.swing.SwingNode
 import javafx.fxml.Initializable
 import javafx.scene.control.Label
+import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
 import javafx.scene.layout.BorderPane
 import javafx.stage.FileChooser
@@ -18,10 +19,9 @@ class JFXHexEditController : Initializable {
     private lateinit var jfxHexEdit: JFXHexEdit
     private lateinit var hexLib: HexLib
     lateinit var borderPane: BorderPane
+    lateinit var editMenu: Menu
     lateinit var saveMenuItem: MenuItem
     lateinit var saveAsMenuItem: MenuItem
-    lateinit var undoMenuItem: MenuItem
-    lateinit var redoMenuItem: MenuItem
     lateinit var statusLabel: Label
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
@@ -33,6 +33,7 @@ class JFXHexEditController : Initializable {
             swingNode.content = hexLib
         }
         borderPane.center = swingNode
+        syncUi()
     }
 
     fun openFile() {
@@ -57,12 +58,26 @@ class JFXHexEditController : Initializable {
     private fun syncUi() {
         saveMenuItem.isDisable = openedFile == null
         saveAsMenuItem.isDisable = openedFile == null
-        undoMenuItem.isDisable = openedFile == null
-        redoMenuItem.isDisable = openedFile == null
+        editMenu.isDisable = openedFile == null
+        for (item in editMenu.items) {
+            item.isDisable = openedFile == null
+        }
     }
 
     fun setApplication(stage: JFXHexEdit) {
         this.jfxHexEdit = stage
+    }
+
+    fun cut() {
+        hexLib.hexTransferHandler.cutContent2Clipboard()
+    }
+
+    fun copy() {
+        hexLib.hexTransferHandler.copyContent2Clipboard()
+    }
+
+    fun paste() {
+        hexLib.hexTransferHandler.pasteContentFromClipboard()
     }
 
     fun undo() {
