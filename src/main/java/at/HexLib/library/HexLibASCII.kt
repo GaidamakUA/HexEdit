@@ -4,7 +4,7 @@ import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.event.KeyEvent
 
-class HexLibASCII(he: HexLib) : BasicContentPanel(he), TextEditor {
+class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
     private val _mappingTable: MutableMap<Byte, String> = mutableMapOf()
     override val mappingTable: Map<Byte, String> = _mappingTable
 
