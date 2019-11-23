@@ -4,7 +4,9 @@ import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.event.KeyEvent
 
-class HexLibASCII(he: HexLib) : BasicContentPanel(he) {
+class HexLibASCII(he: HexLib) : BasicContentPanel(he), TextEditor {
+    private val _mappingTable: MutableMap<Byte, String> = mutableMapOf()
+    override val mappingTable: Map<Byte, String> = _mappingTable
 
     init {
         setFontObjects()
@@ -98,9 +100,8 @@ class HexLibASCII(he: HexLib) : BasicContentPanel(he) {
     }
 
     @ExperimentalUnsignedTypes
-    private fun convertByteToString(byte: Byte): String {
-        return byte.toUByte().toInt().toChar().toString()
-    }
+    private fun convertByteToString(byte: Byte): String =
+            mappingTable[byte] ?: byte.toUByte().toInt().toChar().toString()
 
     private fun fillRect4Cursor(g: Graphics, x: Int, y: Int, s: Int) {
         g.fillRect(HexLib.fontWidth * x + BasicPanel.border,
@@ -150,5 +151,16 @@ class HexLibASCII(he: HexLib) : BasicContentPanel(he) {
         val block = Character.UnicodeBlock.of(c)
         return (!Character.isISOControl(c) && c != KeyEvent.CHAR_UNDEFINED
                 && block != null && block !== Character.UnicodeBlock.SPECIALS)
+    }
+
+    override fun map(byte: Byte, string: String) {
+        if (string.length != 1) {
+            throw IllegalArgumentException("Only mapping to 1 character supported yet")
+        }
+        _mappingTable[byte] = string
+    }
+
+    override fun unmap(byte: Byte) {
+        _mappingTable.remove(byte)
     }
 }

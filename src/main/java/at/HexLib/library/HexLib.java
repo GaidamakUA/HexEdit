@@ -855,6 +855,10 @@ public class HexLib extends JPanel implements AdjustmentListener, ClipboardOwner
                 || jHexEditorASCII.hasFocus() || jHexEditorHEX.hasFocus();
     }
 
+    public TextEditor getTextEditor() {
+        return jHexEditorASCII;
+    }
+
     public static boolean instanceOfHexLib(Object obj) {
         if (obj instanceof HexLib || obj instanceof HexLibHEX
                 || obj instanceof HexLibASCII || obj instanceof HeaderLenPanel

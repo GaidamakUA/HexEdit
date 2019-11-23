@@ -31,6 +31,8 @@ class JFXHexEditController : Initializable {
         SwingUtilities.invokeLater {
             hexLib = HexLib()
             swingNode.content = hexLib
+
+            hexLib.textEditor.map(0x55, "Д")
         }
         borderPane.center = swingNode
         syncUi()
