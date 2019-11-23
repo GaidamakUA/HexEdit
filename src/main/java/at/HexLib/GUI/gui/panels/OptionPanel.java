@@ -201,7 +201,7 @@ public class OptionPanel extends JPanel {
         cols = colStart;
         row++;
         row++;
-        //    JPanel pnlFontSlider = FontSizePanel.getPanel(he);
+        //    JPanel pnlFontSlider = FontSizePanel.getPanel(hexLib);
         //    pnlFontSlider.setBorder(BorderFactory.createTitledBorder("Font resize"));
         //    builder.add(pnlFontSlider, cc.xyw(cols, row, colMax - cols));
 

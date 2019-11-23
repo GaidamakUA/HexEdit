@@ -15,7 +15,7 @@ import java.awt.event.KeyListener;
 
 public class BasicPanel extends JComponent implements KeyListener {
 
-    protected HexLib he;
+    protected HexLib hexLib;
     protected final static int border = 2;
     protected final static int borderTwice = border * 2 + 1;
 
@@ -45,8 +45,8 @@ public class BasicPanel extends JComponent implements KeyListener {
     protected int maxInactive;
     private final HexLibFocusListener focusListener;
 
-    public BasicPanel(HexLib he) {
-        this.he = he;
+    public BasicPanel(HexLib hexLib) {
+        this.hexLib = hexLib;
         setLayout(new BorderLayout());
 
         // addMouseListener(this);
@@ -76,13 +76,13 @@ public class BasicPanel extends JComponent implements KeyListener {
                         getSelectionModel().addStartAndEndPoint(getCursorPosition(), getCursorPosition());
                     }
                     int changeCurPos = getSelectionModel().getEndPoint();
-                    changeCurPos -= (16 * (he.getLines() + 1));
+                    changeCurPos -= (16 * (hexLib.getLines() + 1));
                     getSelectionModel().addNewEndPoint(changeCurPos);
-                    scrollPane(-(he.getLines() + 1));
+                    scrollPane(-(hexLib.getLines() + 1));
                 } else {
                     int changeCurPos = 0;
-                    if (getCursorPosition() > (16 * (he.getLines() + 1))) {
-                        changeCurPos = getCursorPosition() - (16 * (he.getLines() + 1));
+                    if (getCursorPosition() > (16 * (hexLib.getLines() + 1))) {
+                        changeCurPos = getCursorPosition() - (16 * (hexLib.getLines() + 1));
                     }
                     setCursorPosition(changeCurPos);
                     updateCursor();
@@ -94,14 +94,14 @@ public class BasicPanel extends JComponent implements KeyListener {
                         getSelectionModel().addStartAndEndPoint(getCursorPosition(), getCursorPosition());
                     }
                     int changeCurPos = getSelectionModel().getEndPoint();
-                    changeCurPos += (16 * (he.getLines() + 1));
+                    changeCurPos += (16 * (hexLib.getLines() + 1));
                     getSelectionModel().addNewEndPoint(changeCurPos);
-                    scrollPane(+(he.getLines() + 1));
+                    scrollPane(+(hexLib.getLines() + 1));
                 } else {
-                    if (getCursorPosition() < (he.buff.length - (16 * (he.getLines() + 1)))) {
-                        setCursorPosition(getCursorPosition() + (16 * (he.getLines() + 1)));
+                    if (getCursorPosition() < (hexLib.buff.length - (16 * (hexLib.getLines() + 1)))) {
+                        setCursorPosition(getCursorPosition() + (16 * (hexLib.getLines() + 1)));
                     } else {
-                        setCursorPosition(he.buff.length - 1);
+                        setCursorPosition(hexLib.buff.length - 1);
                     }
                     updateCursor();
                 }
@@ -128,12 +128,12 @@ public class BasicPanel extends JComponent implements KeyListener {
                     checkScrollOneLineRequired(true);
                 } else if (e.getModifiers() == (KeyEvent.CTRL_MASK + KeyEvent.SHIFT_MASK)) {
                     if (getSelectionModel().getStartPoint() < 0) {
-                        getSelectionModel().addStartAndEndPoint(getCursorPosition(), he.buff.length - 1);
+                        getSelectionModel().addStartAndEndPoint(getCursorPosition(), hexLib.buff.length - 1);
                     } else {
-                        getSelectionModel().addNewEndPoint(he.buff.length - 1);
+                        getSelectionModel().addNewEndPoint(hexLib.buff.length - 1);
                     }
                 } else if (e.getModifiers() == KeyEvent.CTRL_MASK) {
-                    setCursorPosition(he.buff.length - 1);
+                    setCursorPosition(hexLib.buff.length - 1);
                 } else if (e.getModifiers() == 0) {
                     int mu = (getCursorPosition() + 1) / 16;
                     if (getCursorPosition() + 1 != mu * 16) {
@@ -227,7 +227,7 @@ public class BasicPanel extends JComponent implements KeyListener {
                     getSelectionModel().addNewEndPoint(getSelectionModel().getEndPoint() + 16);
                     checkScrollOneLineRequired(true);
                 } else {
-                    if (getCursorPosition() < (he.buff.length - 16)) {
+                    if (getCursorPosition() < (hexLib.buff.length - 16)) {
                         setCursorPosition(getCursorPosition() + 16);
                     }
                     /* clear selection anyway, even if the cursor was not set */
@@ -238,40 +238,40 @@ public class BasicPanel extends JComponent implements KeyListener {
             case 65: // a
                 if (e.getModifiers() == InputEvent.CTRL_MASK) {
                     getSelectionModel().clear();
-                    getSelectionModel().addStartAndEndPoint(0, he.buff.length - 1);
+                    getSelectionModel().addStartAndEndPoint(0, hexLib.buff.length - 1);
                     e.consume();
-                    he.repaint();
+                    hexLib.repaint();
                 }
                 break;
             case 67: // c
                 if (e.getModifiers() == InputEvent.CTRL_MASK) {
-                    he.getHexTransferHandler().copyContent2Clipboard();
+                    hexLib.getHexTransferHandler().copyContent2Clipboard();
                 }
                 break;
             case 86: // v
                 if (e.getModifiers() == InputEvent.CTRL_MASK) {
-                    he.getHexTransferHandler().pasteContentFromClipboard();
+                    hexLib.getHexTransferHandler().pasteContentFromClipboard();
                 }
                 break;
             case 88: // x
                 if (e.getModifiers() == InputEvent.CTRL_MASK) {
-                    he.getHexTransferHandler().cutContent2Clipboard();
+                    hexLib.getHexTransferHandler().cutContent2Clipboard();
                 }
                 break;
             case 127: // DEL
-                he.getHexTransferHandler().deleteChars();
+                hexLib.getHexTransferHandler().deleteChars();
                 break;
         }
     }
 
     void checkScrollOneLineRequired(boolean directionDown) {
-        int ini = he.getStart() * 16;
-        int end = ini + ((he.getLines()
+        int ini = hexLib.getStart() * 16;
+        int end = ini + ((hexLib.getLines()
                 /* add 2, cause first line starts with 1 (instead of 0) and one is header line */
                 + 1) * 16);
 
-        if (end > he.buff.length) {
-            end = he.buff.length;
+        if (end > hexLib.buff.length) {
+            end = hexLib.buff.length;
         }
         if (directionDown) {
             if (Math.max(getSelectionModel().getStartPoint(), getSelectionModel().getEndPoint()) >= end) {
@@ -284,20 +284,20 @@ public class BasicPanel extends JComponent implements KeyListener {
                 return;
             }
         }
-        he.repaint();
+        hexLib.repaint();
     }
 
     protected void updateCursor() {
         int n = (getCursorPosition() / 16);
 
-        if (n < he.getStart()) {
-            he.setStart(n);
-        } else if (n >= he.getStart() + he.getLines()) {
-            he.setStart(n - (he.getLines()));
+        if (n < hexLib.getStart()) {
+            hexLib.setStart(n);
+        } else if (n >= hexLib.getStart() + hexLib.getLines()) {
+            hexLib.setStart(n - (hexLib.getLines()));
         }
-        he.scrlRight.setValues(he.getStart(), he.getLines(), 0, he.maxLineas);
+        hexLib.scrlRight.setValues(hexLib.getStart(), hexLib.getLines(), 0, hexLib.maxLineas);
         /* repaint ASCII + HEX - view */
-        he.repaint();
+        hexLib.repaint();
     }
 
     @Override
@@ -314,19 +314,19 @@ public class BasicPanel extends JComponent implements KeyListener {
     public void paint(Graphics g) {
         // checkOverMaxLines();
         Color oldColor = g.getColor();
-        ini = he.getStart();
+        ini = hexLib.getStart();
         /* add 2, cause first line starts with 1 (instead of 0) and one is header line */
-        end = Math.min(ini + he.getLines() + 1, he.maxLineas);
-        if (hasTextFieldColors && !he.txtFieldContainer.isEnabled()) {
-            g.setColor(he.getDisabledBG());
-        } else if (hasTextFieldColors && !he.txtFieldContainer.isEditable()) {
-            g.setColor(he.getInactiveBG());
+        end = Math.min(ini + hexLib.getLines() + 1, hexLib.maxLineas);
+        if (hasTextFieldColors && !hexLib.txtFieldContainer.isEnabled()) {
+            g.setColor(hexLib.getDisabledBG());
+        } else if (hasTextFieldColors && !hexLib.txtFieldContainer.isEditable()) {
+            g.setColor(hexLib.getInactiveBG());
         } else {
             g.setColor(getBackground());
         }
 
         maxInactive = -1;
-        if (end == he.maxLineas) {
+        if (end == hexLib.maxLineas) {
             maxHeightPainted = borderTwice;
             int muCompare = 0;
             if ((muCompare = (end - ini)) == 0) {
@@ -337,13 +337,13 @@ public class BasicPanel extends JComponent implements KeyListener {
             }
             maxInactive = getBounds().height - maxHeightPainted;
         } else {
-            maxHeightPainted = Math.min(getBounds().height, he.maxHeight);
+            maxHeightPainted = Math.min(getBounds().height, hexLib.maxHeight);
         }
         g.fillRect(0, 0, minWidth, maxHeightPainted);
         if (hasStripes) {
             g.setColor(stripeColors[1]);
-            int starter = ((he.getStart() % 2 == 0) ? 0 : 1);
-            int lastStripe = end - he.getStart();
+            int starter = ((hexLib.getStart() % 2 == 0) ? 0 : 1);
+            int lastStripe = end - hexLib.getStart();
             for (int row = starter; row <= lastStripe; row += 2) {
                 g.fillRect(0, row * HexLib.fontHeight, minWidth, HexLib.fontHeight);
             }
@@ -357,10 +357,10 @@ public class BasicPanel extends JComponent implements KeyListener {
     }
 
     protected boolean checkOverMaxLines() {
-        boolean b = he.maxLineas <= he.getLines() + he.getStart();
-        // boolean b = he.maxLineas <= he.getLineas() + he.sb.getValue();
+        boolean b = hexLib.maxLineas <= hexLib.getLines() + hexLib.getStart();
+        // boolean b = hexLib.maxLineas <= hexLib.getLineas() + hexLib.sb.getValue();
         if (b) {
-            he.setStart(he.maxLineas - he.getLines() - 1);
+            hexLib.setStart(hexLib.maxLineas - hexLib.getLines() - 1);
         }
         return b;
     }
@@ -429,12 +429,12 @@ public class BasicPanel extends JComponent implements KeyListener {
     void setCursorPositionInternal(int cursor, boolean clearSelection) {
         if (cursor < 0) {
             cursor = 0;
-        } else if (cursor > he.buff.length - 1) {
-            cursor = he.buff.length - 1;
+        } else if (cursor > hexLib.buff.length - 1) {
+            cursor = hexLib.buff.length - 1;
         }
-        int muOldCursor = he.cursor;
-        he.cursor = cursor;
-        he.firePropertyChange(HexLib.cursorProperty, muOldCursor, cursor);
+        int muOldCursor = hexLib.cursor;
+        hexLib.cursor = cursor;
+        hexLib.firePropertyChange(HexLib.cursorProperty, muOldCursor, cursor);
 
         if (clearSelection) {
             getSelectionModel().clear();
@@ -448,7 +448,7 @@ public class BasicPanel extends JComponent implements KeyListener {
      * @return
      */
     public int getCursorPosition() {
-        return he.cursor;
+        return hexLib.cursor;
     }
 
     /**
@@ -483,27 +483,27 @@ public class BasicPanel extends JComponent implements KeyListener {
     }
 
     public Color getFontForeground() {
-        if (!he.txtFieldContainer.isEnabled()) {
-            return he.getInactiveFG();
+        if (!hexLib.txtFieldContainer.isEnabled()) {
+            return hexLib.getInactiveFG();
         }
         return fontForeground;
     }
 
     void scrollPane(int unitsToScroll) {
         if (unitsToScroll != 0) {
-            he.setStart(he.getStart() + unitsToScroll);
+            hexLib.setStart(hexLib.getStart() + unitsToScroll);
             if (checkOverMaxLines()) {
                 // we corrected the limit ==> set the value to the very end as well
-                he.scrlRight.setValue(he.scrlRight.getMaximum() - he.scrlRight.getVisibleAmount());
+                hexLib.scrlRight.setValue(hexLib.scrlRight.getMaximum() - hexLib.scrlRight.getVisibleAmount());
             } else {
-                he.scrlRight.setValue(he.getStart());
+                hexLib.scrlRight.setValue(hexLib.getStart());
             }
         }
         /* repaint in case of mark was set */
-        he.repaint();
+        hexLib.repaint();
     }
 
     HexLibSelectionModel getSelectionModel() {
-        return he.getSelectionModel();
+        return hexLib.getSelectionModel();
     }
 }

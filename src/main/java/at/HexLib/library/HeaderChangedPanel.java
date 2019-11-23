@@ -35,7 +35,7 @@ public class HeaderChangedPanel extends BasicPanel {
         g.fillRect(0, 0, getBounds().width, getBounds().height);
         g.setColor(fontChangedForeground);
         // g.setColor(Color.yellow);
-        if (he.isContentChanged()) {
+        if (hexLib.isContentChanged()) {
             g.setFont(HexLib.fontBold);
             g.drawString(strContentChanged,
                     (getBounds().width - HexLib.fontWidth) / 2

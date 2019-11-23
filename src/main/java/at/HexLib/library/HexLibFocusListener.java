@@ -22,9 +22,9 @@ public class HexLibFocusListener implements FocusListener {
     public void focusGained(FocusEvent e) {
         /* used for the cursor */
         basicPanel.repaint();
-        if (!basicPanel.he.isOwnFocusComponent(e.getOppositeComponent())) {
+        if (!basicPanel.hexLib.isOwnFocusComponent(e.getOppositeComponent())) {
             FocusEvent event = getAdaptedEvent(e);
-            for (FocusListener curFocus : basicPanel.he.getFocusListeners()) {
+            for (FocusListener curFocus : basicPanel.hexLib.getFocusListeners()) {
                 /* forward from the subcomponet to the master compontent the focus-changed event */
                 curFocus.focusGained(event);
             }
@@ -35,9 +35,9 @@ public class HexLibFocusListener implements FocusListener {
     public void focusLost(FocusEvent e) {
         /* used for the cursor */
         basicPanel.repaint();
-        if (!basicPanel.he.isOwnFocusComponent(e.getOppositeComponent())) {
+        if (!basicPanel.hexLib.isOwnFocusComponent(e.getOppositeComponent())) {
             FocusEvent event = getAdaptedEvent(e);
-            for (FocusListener curFocus : basicPanel.he.getFocusListeners()) {
+            for (FocusListener curFocus : basicPanel.hexLib.getFocusListeners()) {
                 /* forward from the subcomponet to the master compontent the focus-changed event */
                 curFocus.focusLost(event);
             }
@@ -49,21 +49,21 @@ public class HexLibFocusListener implements FocusListener {
         if (oppositeComponent != null) {
             /* prevent insights into the subcomponents and allow one global Focus handling */
             if (oppositeComponent instanceof HexLibASCII) {
-                oppositeComponent = ((HexLibASCII) oppositeComponent).he;
+                oppositeComponent = ((HexLibASCII) oppositeComponent).hexLib;
             } else if (oppositeComponent instanceof HexLibHEX) {
-                oppositeComponent = ((HexLibHEX) oppositeComponent).he;
+                oppositeComponent = ((HexLibHEX) oppositeComponent).hexLib;
             } else if (oppositeComponent instanceof HeaderLenPanel) {
-                oppositeComponent = ((HeaderLenPanel) oppositeComponent).he;
+                oppositeComponent = ((HeaderLenPanel) oppositeComponent).hexLib;
             } else if (oppositeComponent instanceof ColumnsLeft) {
                 oppositeComponent = ((ColumnsLeft) oppositeComponent).he;
             } else if (oppositeComponent instanceof HeaderColumnPanel) {
-                oppositeComponent = ((HeaderColumnPanel) oppositeComponent).he;
+                oppositeComponent = ((HeaderColumnPanel) oppositeComponent).hexLib;
             } else if (oppositeComponent instanceof HeaderChangedPanel) {
-                oppositeComponent = ((HeaderChangedPanel) oppositeComponent).he;
+                oppositeComponent = ((HeaderChangedPanel) oppositeComponent).hexLib;
             }
         }
 
-        return new FocusEvent(basicPanel.he,
+        return new FocusEvent(basicPanel.hexLib,
                 e.getID(),
                 e.isTemporary(),
                 oppositeComponent);

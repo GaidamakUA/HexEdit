@@ -20,16 +20,16 @@ public class HexLibASCII extends BasicContentPanel {
         if (g == null) {
             return;
         }
-        if (he.buff == null) {
+        if (hexLib.buff == null) {
             // nothing to paint resp. not yet initialized
             return;
         }
-        int ini = he.getStart() * 16;
-        int fin = ini + ((he.getLines()
+        int ini = hexLib.getStart() * 16;
+        int fin = ini + ((hexLib.getLines()
                 /* add 2, cause first line starts with 1 (instead of 0) and one is header line */
                 + 2) * 16);
-        if (fin > he.buff.length) {
-            fin = he.buff.length;
+        if (fin > hexLib.buff.length) {
+            fin = hexLib.buff.length;
         }
 
         int x = 0;
@@ -44,7 +44,7 @@ public class HexLibASCII extends BasicContentPanel {
             if (ini < 0) {
                 return;
             }
-            fin = Math.min(ini + 1, he.buff.length);
+            fin = Math.min(ini + 1, hexLib.buff.length);
         } else {
             /* clear content and repaint complete container */
             super.paint(g);
@@ -54,14 +54,14 @@ public class HexLibASCII extends BasicContentPanel {
         for (int n = Math.max(ini, 0); n < fin; n++) {
             if (checkCurPosPaintable(n)) {
                 if (hasFocus() && getSelectionModel().isEmpty()) {
-                    if (hasStripes && (he.getStart() + y) % 2 == 0) {
+                    if (hasStripes && (hexLib.getStart() + y) % 2 == 0) {
                         g.setColor(stripeColors[1]);
                     } else {
                         g.setColor(getBackground());
                     }
                     fillRect4Cursor(g, x, y, 1);
                     g.setColor(colorActiveCursor);
-                    if (he.cursorBlink != null && he.cursorBlink.isActive()) {
+                    if (hexLib.cursorBlink != null && hexLib.cursorBlink.isActive()) {
                         rect(g, x, y, 1);
                     } else {
                         fillRect4Cursor(g, x, y, 1);
@@ -71,7 +71,7 @@ public class HexLibASCII extends BasicContentPanel {
                     rect(g, x, y, 1);
                 }
                 if (hasFocus() && getSelectionModel().isEmpty()) {
-                    if (he.cursorBlink != null && he.cursorBlink.isActive()) {
+                    if (hexLib.cursorBlink != null && hexLib.cursorBlink.isActive()) {
                         g.setColor(getFontForeground());
                     } else {
                         g.setColor(fontCursorForeground);
@@ -91,12 +91,12 @@ public class HexLibASCII extends BasicContentPanel {
                 }
                 g.setColor(getFontForeground());
             }
-            if (he.buff[n] == 0) {
+            if (hexLib.buff[n] == 0) {
                 printString(g, "", (x++), y);
-            } else if (he.buff[n] < 0) {
-                printString(g, "" + ((char) (256 + he.buff[n])), (x++), y);
+            } else if (hexLib.buff[n] < 0) {
+                printString(g, "" + ((char) (256 + hexLib.buff[n])), (x++), y);
             } else {
-                printString(g, "" + (char) he.buff[n], (x++), y);
+                printString(g, "" + (char) hexLib.buff[n], (x++), y);
             }
             if (x == 16) {
                 x = 0;
@@ -123,31 +123,24 @@ public class HexLibASCII extends BasicContentPanel {
     public int calcCursorPos(int x, int y) {
         x = x / HexLib.fontWidth;
         y = y / HexLib.fontHeight;
-        int total = x + ((y + he.getStart()) * 16);
-        if (total > he.buff.length - 1) {
-            total = he.buff.length - 1;
+        int total = x + ((y + hexLib.getStart()) * 16);
+        if (total > hexLib.buff.length - 1) {
+            total = hexLib.buff.length - 1;
         } else if (total < 0) {
             total = 0;
         }
         return total;
     }
 
-    // KeyListener
-    // @Override
-    // public void keyPressed(KeyEvent e) {
-    // super.keyPressed(e);
-    // if (e.isConsumed()) {
-    // return;
-    // }
     public void keyTyped(KeyEvent e) {
-        if (getCursorPosition() > he.buff.length) {
+        if (getCursorPosition() > hexLib.buff.length) {
             return;
         }
-        if (he.txtFieldContainer.isEditable() && he.txtFieldContainer.isEnabled()
+        if (hexLib.txtFieldContainer.isEditable() && hexLib.txtFieldContainer.isEnabled()
                 && isPrintableChar(e.getKeyChar())) {
-            he.buff[getCursorPosition()] = (byte) e.getKeyChar();
-            he.reCalcHashCode();
-            if (getCursorPosition() != (he.buff.length - 1)) {
+            hexLib.buff[getCursorPosition()] = (byte) e.getKeyChar();
+            hexLib.reCalcHashCode();
+            if (getCursorPosition() != (hexLib.buff.length - 1)) {
                 setCursorPosition(getCursorPosition() + 1);
             }
             updateCursor();
@@ -159,5 +152,4 @@ public class HexLibASCII extends BasicContentPanel {
         return (!Character.isISOControl(c)) && c != KeyEvent.CHAR_UNDEFINED
                 && block != null && block != Character.UnicodeBlock.SPECIALS;
     }
-
 }

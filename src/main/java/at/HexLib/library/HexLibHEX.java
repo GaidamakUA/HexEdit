@@ -25,17 +25,17 @@ public class HexLibHEX extends BasicContentPanel {
         if (g == null) {
             return;
         }
-        if (he.buff == null) {
+        if (hexLib.buff == null) {
             // nothing to paint resp. not yet initialized
             return;
         }
-        int ini = he.getStart() * 16;
-        int end = ini + ((he.getLines()
+        int ini = hexLib.getStart() * 16;
+        int end = ini + ((hexLib.getLines()
                 /* add 2, cause first line starts with 1 (instead of 0) and one is header line */
                 + 2) * 16);
 
-        if (end > he.buff.length) {
-            end = he.buff.length;
+        if (end > hexLib.buff.length) {
+            end = hexLib.buff.length;
         }
 
         // cursor hex
@@ -52,7 +52,7 @@ public class HexLibHEX extends BasicContentPanel {
             if (ini < 0) {
                 return;
             }
-            end = Math.min(ini + 1, he.buff.length);
+            end = Math.min(ini + 1, hexLib.buff.length);
         } else {
             /* clear content and repaint complete container */
             super.paint(g);
@@ -61,17 +61,17 @@ public class HexLibHEX extends BasicContentPanel {
         g.setFont(HexLib.font);
 
         for (int n = ini; n < end; n++) {
-            String byteAsString = he.convertToHex(he.buff[n], 2);
+            String byteAsString = hexLib.convertToHex(hexLib.buff[n], 2);
             if (checkCurPosPaintable(n)) {
                 int hexCursorPos = (x * 3) + hexCursor;
                 if (hasFocus() && getSelectionModel().isEmpty()) {
                     /* First the background */
                     g.setColor(colorSecondCursor);
                     fillRect4Cursor(g, (x * 3), y, 2);
-                    if (he.cursorBlink != null && he.cursorBlink.isActive()) {
+                    if (hexLib.cursorBlink != null && hexLib.cursorBlink.isActive()) {
                         g.setColor(colorActiveCursor);
                     } else {
-                        if (hasStripes && (he.getStart() + y) % 2 == 0) {
+                        if (hasStripes && (hexLib.getStart() + y) % 2 == 0) {
                             g.setColor(stripeColors[1]);
                         } else {
                             g.setColor(getBackground());
@@ -87,7 +87,7 @@ public class HexLibHEX extends BasicContentPanel {
                 if (hasFocus() && getSelectionModel().isEmpty()) {
                     g.setColor(fontCursorForeground);
                     printString(g, byteAsString, ((x++) * 3), y);
-                    if (he.cursorBlink != null && !he.cursorBlink.isActive()) {
+                    if (hexLib.cursorBlink != null && !hexLib.cursorBlink.isActive()) {
                         g.setColor(getFontForeground());
                         printStringSingle(g,
                                 byteAsString.substring(hexCursor, hexCursor + 1),
@@ -148,10 +148,10 @@ public class HexLibHEX extends BasicContentPanel {
 
         int muX = x / (HexLib.fontWidth * 3);
         y = y / HexLib.fontHeight;
-        int total = muX + ((y + he.getStart()) * 16);
+        int total = muX + ((y + hexLib.getStart()) * 16);
         int cursPos = x - muX * HexLib.fontWidth * 3 - HexLib.fontWidth;
-        if (total > he.buff.length - 1) {
-            total = he.buff.length - 1;
+        if (total > hexLib.buff.length - 1) {
+            total = hexLib.buff.length - 1;
             cursPos = 1;
         }
         if (cursPos <= 0 || isHexAlwaysStartFirstPosition()) {
@@ -171,7 +171,7 @@ public class HexLibHEX extends BasicContentPanel {
         if (isHexAlwaysStartFirstPosition()
                 || Math.abs(cursor - getCursorPosition()) > 1) {
             hexCursor = 0;
-            if (0 <= cursor && cursor <= (he.buff.length - 1)) {
+            if (0 <= cursor && cursor <= (hexLib.buff.length - 1)) {
                 super.setCursorPosition(cursor);
             }
             return;
@@ -180,7 +180,7 @@ public class HexLibHEX extends BasicContentPanel {
             if (hexCursor == 0) {
                 hexCursor = 1;
             } else {
-                if (cursor <= (he.buff.length - 1)) {
+                if (cursor <= (hexLib.buff.length - 1)) {
                     hexCursor = 0;
                     super.setCursorPosition(cursor);
                 }
@@ -200,27 +200,27 @@ public class HexLibHEX extends BasicContentPanel {
     // KeyListener
     public void keyTyped(KeyEvent e) {
         // debug("keyTyped("+e+")");
-        if (getCursorPosition() > he.buff.length) {
+        if (getCursorPosition() > hexLib.buff.length) {
             return;
         }
-        if (he.txtFieldContainer.isEditable() && he.txtFieldContainer.isEnabled()) {
+        if (hexLib.txtFieldContainer.isEditable() && hexLib.txtFieldContainer.isEnabled()) {
             char c = e.getKeyChar();
             if (((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'F'))
                     || ((c >= 'a') && (c <= 'f'))) {
                 char[] str = new char[2];
-                String n = he.convertToHex((int) he.buff[getCursorPosition()], 2);
+                String n = hexLib.convertToHex((int) hexLib.buff[getCursorPosition()], 2);
                 str[1 - hexCursor] = n.charAt(1 - hexCursor);
                 str[hexCursor] = e.getKeyChar();
-                he.buff[getCursorPosition()] =
+                hexLib.buff[getCursorPosition()] =
                         (byte) Integer.parseInt(new String(str), 16);
 
                 if (hexCursor != 1) {
                     hexCursor = 1;
-                } else if (getCursorPosition() != (he.buff.length - 1)) {
+                } else if (getCursorPosition() != (hexLib.buff.length - 1)) {
                     setCursorPosition(getCursorPosition() + 1);
                     hexCursor = 0;
                 }
-                he.reCalcHashCode();
+                hexLib.reCalcHashCode();
                 updateCursor();
             }
         }

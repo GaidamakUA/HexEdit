@@ -31,7 +31,7 @@ public class HeaderColumnPanel extends BasicPanel {
 
         strHeader = new String[16];
         for (int i = 0; i < 16; i++) {
-            strHeader[i] = "." + he.convertToHex(i, 1);
+            strHeader[i] = "." + hexLib.convertToHex(i, 1);
         }
     }
 

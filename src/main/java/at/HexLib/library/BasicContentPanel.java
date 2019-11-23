@@ -71,16 +71,16 @@ public abstract class BasicContentPanel extends BasicPanel implements
             /* only allow the proper modifiers to be expand the selection */
             getSelectionModel().addNewEndPoint(mousePressedPos);
         } else if ((e.getModifiersEx() ^ leftAndCtrl) == 0) {
-            getSelectionModel().addStartAndEndPoint(he.getCursorPosition(),
+            getSelectionModel().addStartAndEndPoint(hexLib.getCursorPosition(),
                     mousePressedPos);
         }
         int muReleasePointY = e.getPoint().y;
         int unitsToScroll = 0;
         if (muReleasePointY < 0) {
-            unitsToScroll = -1 + he.getLines() * muReleasePointY / getSize().height;
+            unitsToScroll = -1 + hexLib.getLines() * muReleasePointY / getSize().height;
         } else if (muReleasePointY > getSize().height) {
             unitsToScroll =
-                    1 + he.getLines() * (muReleasePointY - getSize().height)
+                    1 + hexLib.getLines() * (muReleasePointY - getSize().height)
                             / getSize().height;
         }
         scrollPane(unitsToScroll);
@@ -97,7 +97,7 @@ public abstract class BasicContentPanel extends BasicPanel implements
          * get it
          */
         if (!hasFocus()) {
-            he.requestFocusInWindow();
+            hexLib.requestFocusInWindow();
         }
     }
 
@@ -125,9 +125,9 @@ public abstract class BasicContentPanel extends BasicPanel implements
             canCursorBeChanged = true;
         } else if ((e.getModifiersEx() ^ leftAndShift) == 0) {
             /* Mouse button left AND Shift, without any additional modifiers (=Keys) */
-            getSelectionModel().addStartAndEndPoint(he.getCursorPosition(),
+            getSelectionModel().addStartAndEndPoint(hexLib.getCursorPosition(),
                     pointYPressed);
-            he.repaint();
+            hexLib.repaint();
         } else if ((e.getModifiersEx() ^ leftAndCtrl) == 0) {
             canCursorBeChanged = true;
             clearSelection = false;
@@ -136,14 +136,8 @@ public abstract class BasicContentPanel extends BasicPanel implements
         if (canCursorBeChanged && pointYPressed >= 0) {
             setCursorPositionInternal(pointYPressed, clearSelection);
             this.requestFocus();
-            he.repaint();
+            hexLib.repaint();
         }
-        // System.out.println("Mouse Pressed=" + e.getPoint() + "==>" + pointYPressed
-        // + "/SHIFT=" + (e.isShiftDown()) + "/CTRL="
-        // + (e.isControlDown()) + "/BUTTON="
-        // + (SwingUtilities.isLeftMouseButton(e))
-        // + "/no modifier=" + e.getModifiersEx() + "/"
-        // + ((e.getModifiersEx() ^ leftAndShift)));
     }
 
     @Override
