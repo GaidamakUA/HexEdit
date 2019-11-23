@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent
 
 class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
     private val _mappingTable: MutableMap<Byte, String> = mutableMapOf()
+    private val mappingTableReverse: MutableMap<String, Byte> = mutableMapOf()
     override val mappingTable: Map<Byte, String> = _mappingTable
 
     init {
@@ -132,13 +133,17 @@ class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
         return total
     }
 
-    override fun keyTyped(e: KeyEvent) {
+    override fun keyTyped(event: KeyEvent) {
         if (cursorPosition > hexLib.buff.size) {
             return
         }
-        if (hexLib.txtFieldContainer.isEditable && hexLib.txtFieldContainer.isEnabled
-                && isPrintableChar(e.keyChar)) {
-            hexLib.buff[cursorPosition] = e.keyChar.toByte()
+        if (!(hexLib.txtFieldContainer.isEditable && hexLib.txtFieldContainer.isEnabled)) {
+            return
+        }
+        val char = event.keyChar
+        val stringChar = char.toString()
+        if (isPrintableChar(char) || mappingTableReverse.contains(stringChar)) {
+            hexLib.buff[cursorPosition] = mappingTableReverse[stringChar] ?: char.toByte()
             hexLib.reCalcHashCode()
             if (cursorPosition != hexLib.buff.size - 1) {
                 cursorPosition = cursorPosition + 1
@@ -147,7 +152,10 @@ class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
         }
     }
 
-    internal fun isPrintableChar(c: Char): Boolean {
+    private fun isPrintableChar(c: Char): Boolean {
+        if (c.toInt() > 255) {
+            return false
+        }
         val block = Character.UnicodeBlock.of(c)
         return (!Character.isISOControl(c) && c != KeyEvent.CHAR_UNDEFINED
                 && block != null && block !== Character.UnicodeBlock.SPECIALS)
@@ -158,9 +166,11 @@ class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
             throw IllegalArgumentException("Only mapping to 1 character supported yet")
         }
         _mappingTable[byte] = string
+        mappingTableReverse[string] = byte
     }
 
     override fun unmap(byte: Byte) {
+        mappingTableReverse.remove(_mappingTable[byte])
         _mappingTable.remove(byte)
     }
 }
