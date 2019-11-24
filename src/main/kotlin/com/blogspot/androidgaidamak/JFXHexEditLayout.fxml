@@ -77,6 +77,9 @@
                         <TableColumn fx:id="charColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity"
                                      prefWidth="64.0" text="Char"/>
                     </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
                 </TableView>
                 <HBox prefWidth="200.0">
                     <children>
