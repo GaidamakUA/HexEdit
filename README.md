@@ -13,8 +13,9 @@ End goal is to create modern HexEditor component for JavaFX like HexLib used to 
 - [x] Editor
 - [x] Save and Load features
 - [x] Copy & Paste
-- [ ] Undo & Redo
 - [ ] Tables
+- [ ] Search
+- [ ] Undo & Redo
 
 # Used technologies
 * JavaFX
