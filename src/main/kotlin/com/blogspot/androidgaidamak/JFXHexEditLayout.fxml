@@ -91,4 +91,21 @@
             </children>
         </VBox>
     </left>
+    <right>
+        <VBox prefHeight="200.0" prefWidth="128.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label maxWidth="1.7976931348623157E308" minHeight="-Infinity" text="Search by&#10;byte difference"/>
+                <ListView fx:id="searchListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                          prefHeight="1000.0"/>
+                <HBox prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <TextField fx:id="byteSearchTextField" promptText="Byte"/>
+                        <Button mnemonicParsing="false" onAction="#addSearchByte" text="+"/>
+                    </children>
+                </HBox>
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#search" text="Search"/>
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clearSearch" text="Clear"/>
+            </children>
+        </VBox>
+    </right>
 </BorderPane>

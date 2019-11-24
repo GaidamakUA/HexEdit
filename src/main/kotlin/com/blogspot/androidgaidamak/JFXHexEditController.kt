@@ -2,6 +2,8 @@ package com.blogspot.androidgaidamak
 
 import at.HexLib.library.HexLib
 import javafx.beans.property.SimpleStringProperty
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import javafx.collections.transformation.FilteredList
 import javafx.embed.swing.SwingNode
 import javafx.fxml.Initializable
@@ -33,6 +35,10 @@ class JFXHexEditController : Initializable {
     lateinit var byteField: TextField
     lateinit var charField: TextField
 
+    lateinit var searchListView: ListView<Byte>
+    lateinit var byteSearchTextField: TextField
+    private val searchByteList: ObservableList<Byte> = FXCollections.observableArrayList()
+
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         println("initialize $borderPane")
 
@@ -41,17 +47,29 @@ class JFXHexEditController : Initializable {
             hexLib = HexLib()
             swingNode.content = hexLib
 
-            hexLib.textEditor.mappingTable[0x55] = "Д"
-
             byteColumn.cellValueFactory = Callback { stringValue ->
-                SimpleStringProperty("0x" + hexLib.textEditor.mappingTable.indexOf(stringValue.value).toUByte().toString(16).padStart(2, '0'))
+                val targetByte = hexLib.textEditor.mappingTable.indexOf(stringValue.value).toByte()
+                SimpleStringProperty(getHexRepresentation(targetByte))
             }
             charColumn.cellValueFactory = Callback { stringValue -> SimpleStringProperty(stringValue.value) }
             mappingTableView.items = FilteredList(hexLib.textEditor.mappingTable, Predicate { string -> string != null })
         }
         borderPane.center = swingNode
         syncUi()
+
+        searchListView.items = searchByteList
+        searchListView.cellFactory = Callback {
+            object : ListCell<Byte>() {
+                override fun updateItem(item: Byte?, empty: Boolean) {
+                    super.updateItem(item, empty)
+                    text = item?.let { getHexRepresentation(it) }
+                }
+            }
+        }
     }
+
+    private fun getHexRepresentation(byte: Byte): String =
+            "0x" + byte.toUByte().toString(16).padStart(2, '0')
 
     fun openFile() {
         val fileChooser = FileChooser()
@@ -99,15 +117,15 @@ class JFXHexEditController : Initializable {
 
     fun addMapping() {
         try {
+            var byteKey: Byte = readByte(byteField) ?: return
             var intKey = byteField.text.toInt()
             if (intKey > 255 || intKey < 0) {
                 statusLabel.text = "Not a byte"
 
-                byteField.clear()
-                charField.clear()
+
                 return
             }
-            var byteKey = intKey.toByte()
+//            var byteKey = intKey.toByte()
             var charValue = charField.text
             if (charValue.length != 1) {
                 statusLabel.text = "Only 1 character is supported for now"
@@ -131,5 +149,35 @@ class JFXHexEditController : Initializable {
 
     fun redo() {
         println("Redo")
+    }
+
+    private fun readByte(textField: TextField): Byte? {
+        try {
+            var intValue = textField.text.toInt()
+            textField.clear()
+            if (intValue > 255 || intValue < 0) {
+                statusLabel.text = "Not a byte"
+                return null
+            }
+            return intValue.toByte()
+        } catch (e: java.lang.NumberFormatException) {
+            statusLabel.text = "Not a byte"
+            println(e)
+            textField.clear()
+            return null
+        }
+    }
+
+    fun addSearchByte() {
+        val byteValue: Byte = readByte(byteSearchTextField) ?: return
+        searchByteList.add(byteValue)
+    }
+
+    fun search() {
+
+    }
+
+    fun clearSearch() {
+        searchByteList.clear()
     }
 }
