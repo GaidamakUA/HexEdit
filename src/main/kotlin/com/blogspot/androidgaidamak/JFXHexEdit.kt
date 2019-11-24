@@ -21,7 +21,7 @@ class JFXHexEdit : Application() {
         val root = loader.load<Parent>()
         val controller = loader.getController() as JFXHexEditController
         controller.setApplication(this)
-        primaryStage.scene = Scene(root, 600.0, 400.0)
+        primaryStage.scene = Scene(root, 800.0, 600.0)
         primaryStage.show()
     }
 

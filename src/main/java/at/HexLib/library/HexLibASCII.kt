@@ -1,16 +1,19 @@
 package at.HexLib.library
 
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.event.KeyEvent
 
 class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
-    private val _mappingTable: MutableMap<Byte, String> = mutableMapOf()
-    private val mappingTableReverse: MutableMap<String, Byte> = mutableMapOf()
-    override val mappingTable: Map<Byte, String> = _mappingTable
+    override val mappingTable: ObservableList<String?> = FXCollections.observableArrayList()
 
     init {
         setFontObjects()
+        for (i in 0..255) {
+            mappingTable.add(null)
+        }
     }
 
     public override fun setFontObjects() {
@@ -102,7 +105,7 @@ class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
 
     @ExperimentalUnsignedTypes
     private fun convertByteToString(byte: Byte): String =
-            mappingTable[byte] ?: byte.toUByte().toInt().toChar().toString()
+            mappingTable[byte.toUByte().toInt()] ?: byte.toUByte().toInt().toChar().toString()
 
     private fun fillRect4Cursor(g: Graphics, x: Int, y: Int, s: Int) {
         g.fillRect(HexLib.fontWidth * x + BasicPanel.border,
@@ -142,8 +145,12 @@ class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
         }
         val char = event.keyChar
         val stringChar = char.toString()
-        if (isPrintableChar(char) || mappingTableReverse.contains(stringChar)) {
-            hexLib.buff[cursorPosition] = mappingTableReverse[stringChar] ?: char.toByte()
+        if (isPrintableChar(char) || mappingTable.contains(stringChar)) {
+            hexLib.buff[cursorPosition] = if (mappingTable.contains(stringChar)) {
+                mappingTable.indexOf(stringChar).toByte()
+            } else {
+                char.toByte()
+            }
             hexLib.reCalcHashCode()
             if (cursorPosition != hexLib.buff.size - 1) {
                 cursorPosition = cursorPosition + 1
@@ -165,12 +172,10 @@ class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
         if (string.length != 1) {
             throw IllegalArgumentException("Only mapping to 1 character supported yet")
         }
-        _mappingTable[byte] = string
-        mappingTableReverse[string] = byte
+        mappingTable[byte.toUByte().toInt()] = string
     }
 
     override fun unmap(byte: Byte) {
-        mappingTableReverse.remove(_mappingTable[byte])
-        _mappingTable.remove(byte)
+        mappingTable[byte.toUByte().toInt()] = null
     }
 }

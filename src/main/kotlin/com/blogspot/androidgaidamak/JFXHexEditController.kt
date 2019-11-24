@@ -1,16 +1,18 @@
 package com.blogspot.androidgaidamak
 
 import at.HexLib.library.HexLib
+import javafx.beans.property.SimpleStringProperty
+import javafx.collections.transformation.FilteredList
 import javafx.embed.swing.SwingNode
 import javafx.fxml.Initializable
-import javafx.scene.control.Label
-import javafx.scene.control.Menu
-import javafx.scene.control.MenuItem
+import javafx.scene.control.*
 import javafx.scene.layout.BorderPane
 import javafx.stage.FileChooser
+import javafx.util.Callback
 import java.io.File
 import java.net.URL
 import java.util.*
+import java.util.function.Predicate
 import javax.swing.SwingUtilities
 
 
@@ -24,6 +26,10 @@ class JFXHexEditController : Initializable {
     lateinit var saveAsMenuItem: MenuItem
     lateinit var statusLabel: Label
 
+    lateinit var byteColumn: TableColumn<String, String>
+    lateinit var charColumn: TableColumn<String, String>
+    lateinit var mappingTableView: TableView<String>
+
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         println("initialize $borderPane")
 
@@ -32,7 +38,13 @@ class JFXHexEditController : Initializable {
             hexLib = HexLib()
             swingNode.content = hexLib
 
-            hexLib.textEditor.map(0x55, "Д")
+            hexLib.textEditor.mappingTable[0x55] = "Д"
+
+            byteColumn.cellValueFactory = Callback { stringValue ->
+                SimpleStringProperty(hexLib.textEditor.mappingTable.indexOf(stringValue.value).toUByte().toString(16).padStart(2, '0'))
+            }
+            charColumn.cellValueFactory = Callback { stringValue -> SimpleStringProperty(stringValue.value) }
+            mappingTableView.items = FilteredList(hexLib.textEditor.mappingTable, Predicate { string -> string != null })
         }
         borderPane.center = swingNode
         syncUi()
