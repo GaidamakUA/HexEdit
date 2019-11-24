@@ -1,6 +1,7 @@
 package com.blogspot.androidgaidamak
 
 import at.HexLib.library.HexLib
+import com.blogspot.androidgaidamak.data.searchByByteDifference
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -174,7 +175,9 @@ class JFXHexEditController : Initializable {
     }
 
     fun search() {
-
+        val position = hexLib.byteContent.searchByByteDifference(hexLib.cursorPosition, searchByteList.toByteArray())
+        statusLabel.text = "position: $position"
+        hexLib.setCursorPostion(position)
     }
 
     fun clearSearch() {
