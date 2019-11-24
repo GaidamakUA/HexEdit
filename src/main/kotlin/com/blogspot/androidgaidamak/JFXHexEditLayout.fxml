@@ -5,7 +5,7 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blogspot.androidgaidamak.JFXHexEditController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -67,13 +67,25 @@
         </Label>
     </bottom>
     <left>
-        <TableView fx:id="mappingTableView" minWidth="-Infinity" prefWidth="130.0" BorderPane.alignment="CENTER">
-            <columns>
-                <TableColumn fx:id="byteColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="64.0"
-                             resizable="false" text="Byte"/>
-                <TableColumn fx:id="charColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="64.0"
-                             text="Char"/>
-            </columns>
-        </TableView>
+        <VBox maxHeight="1.7976931348623157E308" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <TableView fx:id="mappingTableView" maxHeight="1.7976931348623157E308" minWidth="-Infinity"
+                           prefHeight="1000.0" prefWidth="130.0">
+                    <columns>
+                        <TableColumn fx:id="byteColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity"
+                                     prefWidth="64.0" resizable="false" text="Byte"/>
+                        <TableColumn fx:id="charColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity"
+                                     prefWidth="64.0" text="Char"/>
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0">
+                    <children>
+                        <TextField fx:id="byteField" promptText="Byte"/>
+                        <TextField fx:id="charField" promptText="Char"/>
+                        <Button mnemonicParsing="false" onAction="#addMapping" text="+"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
     </left>
 </BorderPane>

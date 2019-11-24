@@ -30,6 +30,9 @@ class JFXHexEditController : Initializable {
     lateinit var charColumn: TableColumn<String, String>
     lateinit var mappingTableView: TableView<String>
 
+    lateinit var byteField: TextField
+    lateinit var charField: TextField
+
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         println("initialize $borderPane")
 
@@ -41,7 +44,7 @@ class JFXHexEditController : Initializable {
             hexLib.textEditor.mappingTable[0x55] = "Д"
 
             byteColumn.cellValueFactory = Callback { stringValue ->
-                SimpleStringProperty(hexLib.textEditor.mappingTable.indexOf(stringValue.value).toUByte().toString(16).padStart(2, '0'))
+                SimpleStringProperty("0x" + hexLib.textEditor.mappingTable.indexOf(stringValue.value).toUByte().toString(16).padStart(2, '0'))
             }
             charColumn.cellValueFactory = Callback { stringValue -> SimpleStringProperty(stringValue.value) }
             mappingTableView.items = FilteredList(hexLib.textEditor.mappingTable, Predicate { string -> string != null })
@@ -92,6 +95,34 @@ class JFXHexEditController : Initializable {
 
     fun paste() {
         hexLib.hexTransferHandler.pasteContentFromClipboard()
+    }
+
+    fun addMapping() {
+        try {
+            var intKey = byteField.text.toInt()
+            if (intKey > 255 || intKey < 0) {
+                statusLabel.text = "Not a byte"
+
+                byteField.clear()
+                charField.clear()
+                return
+            }
+            var byteKey = intKey.toByte()
+            var charValue = charField.text
+            if (charValue.length != 1) {
+                statusLabel.text = "Only 1 character is supported for now"
+
+                byteField.clear()
+                charField.clear()
+                return
+            }
+            hexLib.textEditor.map(byteKey, charValue)
+
+            byteField.clear()
+            charField.clear()
+        } catch (e: NumberFormatException) {
+            statusLabel.text = "Not a byte"
+        }
     }
 
     fun undo() {
