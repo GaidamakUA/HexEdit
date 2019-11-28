@@ -175,4 +175,8 @@ class JFXHexEditController : Initializable {
     fun clearSearch() {
         searchByteList.clear()
     }
+
+    fun clearMapping() {
+        hexLib.textEditor.clearMap()
+    }
 }

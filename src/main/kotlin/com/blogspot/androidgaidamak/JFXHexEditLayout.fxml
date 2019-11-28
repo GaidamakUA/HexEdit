@@ -92,6 +92,8 @@
                         <Button mnemonicParsing="false" onAction="#addMapping" text="+"/>
                     </children>
                 </HBox>
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clearMapping"
+                        text="Clear"/>
             </children>
         </VBox>
     </left>

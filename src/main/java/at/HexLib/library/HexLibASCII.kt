@@ -178,4 +178,10 @@ class HexLibASCII(hexLib: HexLib) : BasicContentPanel(hexLib), TextEditor {
     override fun unmap(byte: Byte) {
         mappingTable[byte.toUByte().toInt()] = null
     }
+
+    override fun clearMap() {
+        for (i in mappingTable.indices) {
+            mappingTable[i] = null
+        }
+    }
 }
