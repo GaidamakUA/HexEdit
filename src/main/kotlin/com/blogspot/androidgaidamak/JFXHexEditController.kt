@@ -117,31 +117,19 @@ class JFXHexEditController : Initializable {
     }
 
     fun addMapping() {
-        try {
-            var byteKey: Byte = readByte(byteField) ?: return
-            var intKey = byteField.text.toInt()
-            if (intKey > 255 || intKey < 0) {
-                statusLabel.text = "Not a byte"
-
-
-                return
-            }
-//            var byteKey = intKey.toByte()
-            var charValue = charField.text
-            if (charValue.length != 1) {
-                statusLabel.text = "Only 1 character is supported for now"
-
-                byteField.clear()
-                charField.clear()
-                return
-            }
-            hexLib.textEditor.map(byteKey, charValue)
+        var byteKey: Byte = readByte(byteField) ?: return
+        var charValue = charField.text
+        if (charValue.length != 1) {
+            statusLabel.text = "Only 1 character is supported for now"
 
             byteField.clear()
             charField.clear()
-        } catch (e: NumberFormatException) {
-            statusLabel.text = "Not a byte"
+            return
         }
+        hexLib.textEditor.map(byteKey, charValue)
+
+        byteField.clear()
+        charField.clear()
     }
 
     fun undo() {
