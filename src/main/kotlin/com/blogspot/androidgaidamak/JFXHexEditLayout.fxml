@@ -57,14 +57,18 @@
         </MenuBar>
     </top>
     <bottom>
-        <Label fx:id="statusLabel" maxWidth="1.7976931348623157E308" text="Status" BorderPane.alignment="CENTER">
-            <BorderPane.margin>
-                <Insets/>
-            </BorderPane.margin>
-            <padding>
-                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
-            </padding>
-        </Label>
+        <HBox>
+            <Label fx:id="statusLabel" maxWidth="1.7976931348623157E308" prefWidth="1000.0" text="Status"
+                   BorderPane.alignment="CENTER">
+                <BorderPane.margin>
+                    <Insets/>
+                </BorderPane.margin>
+                <padding>
+                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                </padding>
+            </Label>
+            <ChoiceBox fx:id="inputTypeChoiceBox" prefWidth="150.0"/>
+        </HBox>
     </bottom>
     <left>
         <VBox maxHeight="1.7976931348623157E308" prefWidth="100.0" BorderPane.alignment="CENTER">

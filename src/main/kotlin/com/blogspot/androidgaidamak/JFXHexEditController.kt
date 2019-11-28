@@ -39,6 +39,7 @@ class JFXHexEditController : Initializable {
     lateinit var searchListView: ListView<Byte>
     lateinit var byteSearchTextField: TextField
     private val searchByteList: ObservableList<Byte> = FXCollections.observableArrayList()
+    lateinit var inputTypeChoiceBox: ChoiceBox<String>
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         println("initialize $borderPane")
@@ -67,6 +68,8 @@ class JFXHexEditController : Initializable {
                 }
             }
         }
+        inputTypeChoiceBox.items = FXCollections.observableArrayList("Hex", "Dec")
+        inputTypeChoiceBox.value = "Hex"
     }
 
     private fun getHexRepresentation(byte: Byte): String =
@@ -142,7 +145,8 @@ class JFXHexEditController : Initializable {
 
     private fun readByte(textField: TextField): Byte? {
         try {
-            var intValue = textField.text.toInt()
+            val radix = if (inputTypeChoiceBox.value == "Dec") 10 else 16
+            val intValue = textField.text.toInt(radix)
             textField.clear()
             if (intValue > 255 || intValue < 0) {
                 statusLabel.text = "Not a byte"
