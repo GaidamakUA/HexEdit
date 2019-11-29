@@ -7,8 +7,10 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.collections.transformation.FilteredList
 import javafx.embed.swing.SwingNode
+import javafx.event.EventHandler
 import javafx.fxml.Initializable
 import javafx.scene.control.*
+import javafx.scene.control.cell.TextFieldTableCell
 import javafx.scene.layout.BorderPane
 import javafx.stage.FileChooser
 import javafx.util.Callback
@@ -53,7 +55,21 @@ class JFXHexEditController : Initializable {
                 val targetByte = hexLib.textEditor.mappingTable.indexOf(stringValue.value).toByte()
                 SimpleStringProperty(getHexRepresentation(targetByte))
             }
+            byteColumn.onEditCommit = EventHandler { event ->
+                readByte(event.newValue.substring(2))?.let {
+                    val oldByte: Byte = readByte(event.oldValue.substring(2))!!
+                    hexLib.textEditor.map(it, hexLib.textEditor.mappingTable[oldByte.toInt()]!!)
+                    hexLib.textEditor.unmap(oldByte)
+                }
+            }
+            byteColumn.cellFactory = TextFieldTableCell.forTableColumn()
+
             charColumn.cellValueFactory = Callback { stringValue -> SimpleStringProperty(stringValue.value) }
+            charColumn.onEditCommit = EventHandler { event ->
+                val targetByte = hexLib.textEditor.mappingTable.indexOf(event.oldValue)
+                hexLib.textEditor.map(targetByte.toByte(), event.newValue)
+            }
+            charColumn.cellFactory = TextFieldTableCell.forTableColumn()
             mappingTableView.items = FilteredList(hexLib.textEditor.mappingTable, Predicate { string -> string != null })
         }
         borderPane.center = swingNode
@@ -157,6 +173,22 @@ class JFXHexEditController : Initializable {
             statusLabel.text = "Not a byte"
             println(e)
             textField.clear()
+            return null
+        }
+    }
+
+    private fun readByte(text: String): Byte? {
+        try {
+            val radix = if (inputTypeChoiceBox.value == "Dec") 10 else 16
+            val intValue = text.toInt(radix)
+            if (intValue > 255 || intValue < 0) {
+                statusLabel.text = "Not a byte"
+                return null
+            }
+            return intValue.toByte()
+        } catch (e: java.lang.NumberFormatException) {
+            statusLabel.text = "Not a byte"
+            println(e)
             return null
         }
     }
