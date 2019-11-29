@@ -10,10 +10,12 @@ import javafx.embed.swing.SwingNode
 import javafx.event.EventHandler
 import javafx.fxml.Initializable
 import javafx.scene.control.*
+import javafx.scene.control.cell.TextFieldListCell
 import javafx.scene.control.cell.TextFieldTableCell
 import javafx.scene.layout.BorderPane
 import javafx.stage.FileChooser
 import javafx.util.Callback
+import javafx.util.StringConverter
 import java.io.File
 import java.net.URL
 import java.util.*
@@ -76,14 +78,23 @@ class JFXHexEditController : Initializable {
         syncUi()
 
         searchListView.items = searchByteList
-        searchListView.cellFactory = Callback {
-            object : ListCell<Byte>() {
-                override fun updateItem(item: Byte?, empty: Boolean) {
-                    super.updateItem(item, empty)
-                    text = item?.let { getHexRepresentation(it) }
-                }
-            }
-        }
+        searchListView.cellFactory = TextFieldListCell.forListView(object : StringConverter<Byte>() {
+            override fun toString(item: Byte?): String = item?.let { getHexRepresentation(it) } ?: "null"
+
+            override fun fromString(string: String?): Byte = string?.let { readByte(it.substring(2)) } ?: 0
+
+        })
+//        searchListView.cellFactory = Callback {
+////            object : ListCell<Byte>() {
+////                override fun updateItem(item: Byte?, empty: Boolean) {
+////                    super.updateItem(item, empty)
+////                    text = item?.let { getHexRepresentation(it) }
+////                }
+////            }
+////        }
+        searchListView.isEditable = true
+        searchListView.onEditCommit = EventHandler { event -> searchByteList[event.index] = event.newValue }
+
         inputTypeChoiceBox.items = FXCollections.observableArrayList("Hex", "Dec")
         inputTypeChoiceBox.value = "Hex"
     }
@@ -198,9 +209,15 @@ class JFXHexEditController : Initializable {
         searchByteList.add(byteValue)
     }
 
-    fun search() {
+    fun searchByByteDiff() {
         val position = hexLib.byteContent.searchByByteDifference(hexLib.cursorPosition, searchByteList.toByteArray())
-        statusLabel.text = "position: $position"
+        statusLabel.text = "position by dif: $position"
+        hexLib.setCursorPostion(position)
+    }
+
+    fun searchExact() {
+        val position = hexLib.byteContent.searchByByteDifference(hexLib.cursorPosition, searchByteList.toByteArray())
+        statusLabel.text = "position exact: $position"
         hexLib.setCursorPostion(position)
     }
 

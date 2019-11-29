@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
-internal class ByteArrayExtensionsKtTest {
+internal class ByteArrayExtensionsSearchByDifTest {
 
     @Test
     fun simple_failed_queryTooShort() {

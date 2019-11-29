@@ -25,3 +25,24 @@ fun ByteArray.searchByByteDifference(startingPosition: Int, query: ByteArray): I
     }
     return -1
 }
+
+fun ByteArray.search(startingPosition: Int, query: ByteArray): Int {
+    if (startingPosition >= this.size) {
+        throw java.lang.IllegalArgumentException("Starting position out of bounds")
+    }
+    outer@ for (i in startingPosition until size) {
+        if (this[i] != query[0]) {
+            continue
+        }
+        for (j in query.indices) {
+            if (i + j >= size) {
+                return -1
+            }
+            if (this[i + j] != query[j]) {
+                continue@outer
+            }
+        }
+        return i
+    }
+    return -1
+}
